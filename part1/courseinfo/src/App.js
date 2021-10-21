@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Header = (props) => {
-  return(
+  return (
     <>
       <h1>
         {props.course}
@@ -10,19 +10,29 @@ const Header = (props) => {
   )
 }
 
-const Content = (props) => {
-  return(
+const Part = (props) => {
+  return (
     <>
       <p>
         {props.part} {props.count}
       </p>
+    </>    
+  )
+}
+
+const Content = (props) => {
+  return(
+    <>
+      <Part part={props.parts[0]} count={props.counts[0]}/>
+      <Part part={props.parts[1]} count={props.counts[1]}/>
+      <Part part={props.parts[2]} count={props.counts[2]}/>
     </>
   )
 }
 
 
 const Total = (props) => {
-  return(
+  return (
     <>
       <p>
         Number of exercises {props.sum}
@@ -43,9 +53,7 @@ const App = () => {
   return (
     <div>
       <Header course={course} />
-      <Content part={part1} count={exercises1} />
-      <Content part={part2} count={exercises2} />
-      <Content part={part3} count={exercises3} />
+      <Content parts={[part1, part2, part3]} counts={[exercises1, exercises2, exercises3]} />
       <Total sum={exercises1+exercises2+exercises3} />
     </div>
   )
