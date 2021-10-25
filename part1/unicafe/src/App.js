@@ -24,6 +24,8 @@ const App = () => {
       <Display value={good} text='good' />
       <Display value={neutral} text='neutral'/>
       <Display value={bad} text='bad'/>
+      <Display value={(good + bad + neutral)/3} text='average' />
+      <Display value={good/(good + bad + neutral)*100 + '%'} text='positive' />
     </div>
   )
 }
