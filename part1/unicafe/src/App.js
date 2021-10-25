@@ -8,6 +8,8 @@ const Button = ({ handleClick, text }) => (
 
 const Display = ({ value, text }) => <div>{text} {value}</div>
 
+const Placeholder = () => <p>No feedback given</p>
+
 const Statistics = ({ data }) => {
   let good = data[0]
   let neutral = data[1]
@@ -30,6 +32,7 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+  const [hasData, setHasData] =  useState(false)
 
   return (
     <div>
@@ -37,7 +40,7 @@ const App = () => {
       <Button handleClick={() => setGood(good + 1)} text='good' />
       <Button handleClick={() => setNeutral(neutral + 1)} text='neutral' />
       <Button handleClick={() => setBad(bad + 1)} text='bad' />
-      <Statistics data={[good, neutral, bad]} />
+      {(good==0 && neutral==0 && bad ==0) ? <Placeholder /> : <Statistics data={[good, neutral, bad]} />}
     </div>
   )
 }
