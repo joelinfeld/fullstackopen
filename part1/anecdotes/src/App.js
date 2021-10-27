@@ -1,12 +1,23 @@
 import React, { useState } from 'react'
 
+const randExclude = (n, range) => {
+  let done = false
+  let rand
+  while (1) {
+    rand = Math.floor(Math.random() * range)
+    if (rand !== n) break
+  }
+  return rand
+}
+
 const Button = ({ handleClick, text }) => {
   return (
-  <div>
+  <>
     <button onClick={handleClick}>{text}</button>
-  </div>
+  </>
   )
 }
+
 
 const App = () => {
   const anecdotes = [
@@ -18,13 +29,22 @@ const App = () => {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients'
   ]
-   
+
   const [selected, setSelected] = useState(0)
+  const [voted, setVoted] = useState(new Array(anecdotes.length).fill(0))
+  const updateVoteCount = () => {
+    let copy = [...voted]
+    copy[selected] += 1
+    setVoted(copy)
+  }
 
   return (
     <div>
-      {anecdotes[selected]}
-      <Button handleClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))} text='next anecdote'/>
+      <p>{anecdotes[selected]}</p>
+      <p>has {voted[selected]} votes</p>
+      <Button handleClick={updateVoteCount} text='vote'/>
+      <Button handleClick={() => setSelected(randExclude(selected, anecdotes.length))} text='next anecdote'/>
+
     </div>
   )
 }
