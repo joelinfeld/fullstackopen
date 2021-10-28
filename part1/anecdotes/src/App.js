@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
 const randExclude = (n, range) => {
-  let done = false
   let rand
   while (1) {
     rand = Math.floor(Math.random() * range)
@@ -18,7 +17,6 @@ const Button = ({ handleClick, text }) => {
   )
 }
 
-
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often',
@@ -32,19 +30,24 @@ const App = () => {
 
   const [selected, setSelected] = useState(0)
   const [voted, setVoted] = useState(new Array(anecdotes.length).fill(0))
+  const [maxVotedIndex, setMaxVotedIndex] = useState(0)
+
   const updateVoteCount = () => {
     let copy = [...voted]
     copy[selected] += 1
     setVoted(copy)
+    setMaxVotedIndex(copy.findIndex((e) => e === Math.max(...copy)))
   }
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <p>has {voted[selected]} votes</p>
       <Button handleClick={updateVoteCount} text='vote'/>
       <Button handleClick={() => setSelected(randExclude(selected, anecdotes.length))} text='next anecdote'/>
-
+      <h1>Anecdote with the most votes</h1>
+      <p>{anecdotes[maxVotedIndex]}</p>
     </div>
   )
 }
