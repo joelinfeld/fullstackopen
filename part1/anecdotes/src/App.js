@@ -38,7 +38,6 @@ const App = () => {
     setVoted(copy)
     setMaxVotedIndex(copy.findIndex((e) => e === Math.max(...copy)))
   }
-
   return (
     <div>
       <h1>Anecdote of the day</h1>
