@@ -18,6 +18,7 @@ const Course = ({ course }) => {
       {course['parts'].map(part => 
         <p key={part['id']}>{part['name']} {part['exercises']}</p>
       )}
+      <p><b>total of {course['parts'].map(part => part['exercises']).reduce((a, b) => a + b)} exercises </b></p>
     </div>
   )
 }
