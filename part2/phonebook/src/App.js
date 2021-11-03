@@ -20,7 +20,7 @@ const PersonForm = (props) => (
             />
     </div>
     <div>
-      number: <input 
+      find: <input 
               value={props.values[1]}
               onChange={props.handlers[1]}
             />
@@ -57,6 +57,7 @@ const App = () => {
       })
   }, [])
   console.log('render', persons.length, 'persons')
+
   const addEntry = (event) => {
     event.preventDefault()
     const nameObject = {
