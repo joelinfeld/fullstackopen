@@ -1,10 +1,40 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+const api_key = process.env.REACT_APP_API_KEY
+
+const Weather = ({ city }) => {
+  const [ isLoading, setLoading ] = useState(true);
+  const [ weather, setWeather ] = useState([])
+
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${city}`)
+      .then(response => {
+        console.log('promise fulfilled')
+        console.log(response.data)
+        setWeather(response.data.current)
+        setLoading(false)
+      })
+  }, [])
+
+  if (!isLoading) {
+    return(
+      <>
+      <h2>Weather in {city}</h2>
+      <p><b>Temperature:</b> {weather.temperature} Celsius</p>
+      <img src={weather.weather_icons} alt='weather'/>
+      <p><b>Wind: {weather.wind_speed} mph {weather.wind_dir}</b></p>
+      </>
+    )
+  }
+  return <><p>Loading...</p></>
+}
 
 const CountryDetail = ({ country }) => (
   <>
     <h1>{country.name.common}</h1>                 
-    <p>Capital: {country.capital[0]}</p>
+    <p>Capital: {country.capital}</p>
     <p>Area: {country.area} Sq. Miles</p>
     <h2>languages</h2>
     <ul>
@@ -13,8 +43,10 @@ const CountryDetail = ({ country }) => (
       )}
     </ul>
     <img src={country.flags.png} alt='flag'/>
+    <Weather city={country.capital}/>
   </>
 )
+
 
 const Country =  ({ country }) => {
   const [ show, setShow ] = useState(false)
@@ -27,7 +59,8 @@ const Country =  ({ country }) => {
         <div>
           <button onClick={handleClick}>{show ? 'Hide' : 'Show'}</button>
           <CountryDetail country={country}/> 
-        </div> :
+        </div> 
+        :
         <div> 
           {country.name.common + ' '}
           <button onClick={handleClick}>{show ? 'Hide' : 'Show'}</button>
