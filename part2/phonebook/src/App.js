@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
 const Person = ({ person }) => (
   <p>{person.name} {person.number}</p>
@@ -48,31 +48,31 @@ const App = () => {
   const [ newSearch, setNewSearch ] = useState('')
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+        setPersons(response)
       })
+      .catch(error => alert("error"))
   }, [])
-  console.log('render', persons.length, 'persons')
+
 
   const addEntry = (event) => {
     event.preventDefault()
     const nameObject = {
-      id: persons.length,
       name: newName,
       number: newNumber
     }
-    
     if (persons.some(person => person.name === newName)) {
       window.alert(`${newName} is already added to phonebook`)
     } else {
-      console.log('name added', event.target)
-      setPersons(persons.concat(nameObject))
-      setNewName('')
-      setNewNumber('')
+      personService
+        .create(nameObject)
+        .then(response => {
+          setPersons(persons.concat(response))
+          setNewName('')
+          setNewNumber('')
+        })
     }
   }
   
