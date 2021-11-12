@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
 
-const Person = ({ person }) => (
-  <p>{person.name} {person.number}</p>
+const Person = ({ person, handler }) => (
+  <>
+    <p>{person.name} {person.number} <button onClick={(e) => handler(e, person)}>Delete</button></p>
+  </>
 )
 
-const Persons = ({ persons }) => (
-  persons.map(person => 
-    <Person key={person.id} person={person} />
+const Persons = ({ persons, handler }) => (
+  persons.map(person =>
+    <>
+      <Person key={person.id} person={person} handler={handler}/>
+    </>
   )
 )
 
@@ -20,7 +24,7 @@ const PersonForm = (props) => (
             />
     </div>
     <div>
-      find: <input 
+      number: <input 
               value={props.values[1]}
               onChange={props.handlers[1]}
             />
@@ -69,6 +73,7 @@ const App = () => {
       personService
         .create(nameObject)
         .then(response => {
+          console.log(response)
           setPersons(persons.concat(response))
           setNewName('')
           setNewNumber('')
@@ -76,6 +81,13 @@ const App = () => {
     }
   }
   
+  const removeEntry = (event, person) => {
+    event.preventDefault()
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personService.remove(person.id)
+      setPersons(persons.filter(p => p.id !== person.id))
+    }
+  }
   const handleNameChange = (event) => {
     console.log(event.target.value)
     setNewName(event.target.value)
@@ -92,14 +104,14 @@ const App = () => {
   }
 
   return (
-    <div>
+    <>
       <h2>Phonebook</h2>
       <Filter text='filter shown with:' value={newSearch} onChange={handleSearchChange} />
       <h2>Add a new</h2>
       <PersonForm submit={addEntry} values={[newName, newNumber]} handlers={[handleNameChange, handleNumberChange]}/>
       <h2>Numbers</h2>
-      <Persons persons={persons.filter(person => person.name.toLowerCase().includes(newSearch.toLowerCase()))} />
-    </div>
+      <Persons persons={persons.filter(person => person.name.toLowerCase().includes(newSearch.toLowerCase()))} handler={removeEntry} />
+    </>
   )
 }
 
