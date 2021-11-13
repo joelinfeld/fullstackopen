@@ -10,9 +10,7 @@ const Person = ({ person, handler }) => (
 
 const Persons = ({ persons, handler }) => (
   persons.map(person =>
-    <>
       <Person key={person.id} person={person} handler={handler}/>
-    </>
   )
 )
 
@@ -46,9 +44,14 @@ const Filter = (props) => (
   </div>
 )
 
-const Message = ({ text }) => (
-  <div className={text === null ? null : 'message'}>{text}</div>
-)
+const Message = ({ error, text }) => {
+  let style = null
+  if (error) style = 'error'
+  else if (text) style = 'message'
+  return( 
+    <div className={style}>{text}</div>
+  )
+}
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
@@ -56,6 +59,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ newSearch, setNewSearch ] = useState('')
   const [ message, setMessage ] = useState(null)
+  const [ error, setError ] = useState(false)
 
   useEffect(() => {
     personService
@@ -82,6 +86,16 @@ const App = () => {
             setPersons(persons.map(person => person.id !== id ? person : response))
             setNewName('')
             setNewNumber('')
+          })
+          .catch(() => {
+            setNewName('')
+            setNewNumber('')
+            setError(true)
+            setMessage(`${nameObject.name} has been previously deleted`)
+            setTimeout(() => {
+              setMessage(null)
+              setError(false)
+            }, 3000)
           })
       } else return
     } else {
@@ -128,7 +142,7 @@ const App = () => {
     <>
       <h2>Phonebook</h2>
       <Filter text='filter shown with:' value={newSearch} onChange={handleSearchChange} />
-      <Message text={message} />
+      <Message error={error} text={message} />
       <h2>Add a new</h2>
       <PersonForm submit={addEntry} values={[newName, newNumber]} handlers={[handleNameChange, handleNumberChange]}/>
       <h2>Numbers</h2>

@@ -1,21 +1,6 @@
 {
   "persons": [
     {
-      "name": "Bill Billingsly",
-      "number": "66666666",
-      "id": 7
-    },
-    {
-      "name": "bandy fandy",
-      "number": "75",
-      "id": 8
-    },
-    {
-      "name": "bing crosby",
-      "number": "666",
-      "id": 9
-    },
-    {
       "name": "ding dosby",
       "number": "777",
       "id": 10
