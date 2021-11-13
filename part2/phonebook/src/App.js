@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
+import './index.css'
 
 const Person = ({ person, handler }) => (
   <>
@@ -45,11 +46,16 @@ const Filter = (props) => (
   </div>
 )
 
+const Message = ({ text }) => (
+  <div className={text === null ? null : 'message'}>{text}</div>
+)
+
 const App = () => {
   const [ persons, setPersons ] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newSearch, setNewSearch ] = useState('')
+  const [ message, setMessage ] = useState(null)
 
   useEffect(() => {
     personService
@@ -86,6 +92,11 @@ const App = () => {
           setPersons(persons.concat(response))
           setNewName('')
           setNewNumber('')
+          setMessage(`${response.name} has been added`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
+          
         })
     }
   }
@@ -117,6 +128,7 @@ const App = () => {
     <>
       <h2>Phonebook</h2>
       <Filter text='filter shown with:' value={newSearch} onChange={handleSearchChange} />
+      <Message text={message} />
       <h2>Add a new</h2>
       <PersonForm submit={addEntry} values={[newName, newNumber]} handlers={[handleNameChange, handleNumberChange]}/>
       <h2>Numbers</h2>
